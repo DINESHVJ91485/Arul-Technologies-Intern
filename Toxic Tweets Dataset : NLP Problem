@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Use the correct path format
-df = pd.read_csv("/content/drive/MyDrive/Dataset/FinalBalancedDataset.csv")
+df = pd.read_csv("Replace With Your Actual File (FinalBalanceddDataset.csv) Location")
 # Display the first few rows and column names to inspect
 print(df.head())
 print(df.columns)  # Print column names to find the correct one
