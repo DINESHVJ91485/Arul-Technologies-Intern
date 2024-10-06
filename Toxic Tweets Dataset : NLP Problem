@@ -1,0 +1,136 @@
+import pandas as pd
+
+# Use the correct path format
+df = pd.read_csv("/content/drive/MyDrive/Dataset/FinalBalancedDataset.csv")
+# Display the first few rows and column names to inspect
+print(df.head())
+print(df.columns)  # Print column names to find the correct one
+
+
+#Converting text to Bag OF Words
+from sklearn.feature_extraction.text import CountVectorizer
+# Initialize the Bag of Words model
+vectorizer = CountVectorizer(stop_words='english')
+# Use the correct column name for the text data
+X_bow = vectorizer.fit_transform(df['tweet'])  # Replace 'tweet' with the actual column name
+# Check the shape of the resulting Bag of Words matrix
+print(X_bow.shape)
+
+
+#Converting text to TF-IDF
+from sklearn.feature_extraction.text import TfidfVectorizer
+# Initialize the TF-IDF model
+tfidf_vectorizer = TfidfVectorizer(stop_words='english')
+# Use the correct column name for the text data 
+X_tfidf = tfidf_vectorizer.fit_transform(df['tweet'])  # Assuming 'tweet' is the correct column name
+print(X_tfidf.shape)
+
+
+#Prediction Using DecisionTree Classifier
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
+y = df['Toxicity']
+# Step 1: Preprocess the text using TF-IDF (already done)
+# Step 2: Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_tfidf, y, test_size=0.2, random_state=42)
+# Step 3: Train the Decision Tree Classifier
+clf = DecisionTreeClassifier(random_state=42)
+clf.fit(X_train, y_train)
+# Step 4: Make predictions on the test set
+y_pred = clf.predict(X_test)
+# Step 5: Evaluate the model
+# Confusion Matrix
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
+# Classification Report (Precision, Recall, F1-score)
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+# ROC-AUC Score
+roc_auc = roc_auc_score(y_test, clf.predict_proba(X_test)[:, 1])
+print("\nROC-AUC Score: ", roc_auc)
+
+
+#Prediction Using RandomForest Classifier
+from sklearn.ensemble import RandomForestClassifier
+# Step 1: Preprocess the text using TF-IDF (assuming it's already done)
+# Step 2: Use the same train-test split as before (if not done yet, use train_test_split)
+# Step 3: Train the Random Forest Classifier
+rf_clf = RandomForestClassifier(random_state=42, n_estimators=100)  # You can adjust the number of estimators
+rf_clf.fit(X_train, y_train)
+# Step 4: Make predictions on the test set
+y_pred_rf = rf_clf.predict(X_test)
+# Step 5: Evaluate the model
+# Confusion Matrix
+print("Confusion Matrix (Random Forest):")
+print(confusion_matrix(y_test, y_pred_rf))
+# Classification Report (Precision, Recall, F1-score)
+print("\nClassification Report (Random Forest):")
+print(classification_report(y_test, y_pred_rf))
+# ROC-AUC Score
+roc_auc_rf = roc_auc_score(y_test, rf_clf.predict_proba(X_test)[:, 1])
+print("\nROC-AUC Score (Random Forest): ", roc_auc_rf)
+
+
+#Prediction Using NaiveBayes Classifier
+from sklearn.naive_bayes import MultinomialNB
+# Step 1: Preprocess the text using TF-IDF (assuming this is already done)
+# Step 2: Use the same train-test split as before (if not done yet, use train_test_split)
+# Step 3: Train the Naive Bayes Classifier
+nb_clf = MultinomialNB()
+nb_clf.fit(X_train, y_train)
+# Step 4: Make predictions on the test set
+y_pred_nb = nb_clf.predict(X_test)
+# Step 5: Evaluate the model
+# Confusion Matrix
+print("Confusion Matrix (Naive Bayes):")
+print(confusion_matrix(y_test, y_pred_nb))
+# Classification Report (Precision, Recall, F1-score)
+print("\nClassification Report (Naive Bayes):")
+print(classification_report(y_test, y_pred_nb))
+# ROC-AUC Score
+roc_auc_nb = roc_auc_score(y_test, nb_clf.predict_proba(X_test)[:, 1])
+print("\nROC-AUC Score (Naive Bayes): ", roc_auc_nb)
+
+
+#Prediction Using K-Nearest Neighbour
+from sklearn.neighbors import KNeighborsClassifier
+# Step 1: Preprocess the text using TF-IDF (assuming this is already done)
+# Step 2: Use the same train-test split as before (if not done yet, use train_test_split)
+# Step 3: Train the K-NN Classifier
+# Set k=5 (you can change this value to experiment with different numbers of neighbors)
+knn_clf = KNeighborsClassifier(n_neighbors=5)
+knn_clf.fit(X_train, y_train)
+# Step 4: Make predictions on the test set
+y_pred_knn = knn_clf.predict(X_test)
+# Step 5: Evaluate the model
+# Confusion Matrix
+print("Confusion Matrix (K-NN):")
+print(confusion_matrix(y_test, y_pred_knn))
+# Classification Report (Precision, Recall, F1-score)
+print("\nClassification Report (K-NN):")
+print(classification_report(y_test, y_pred_knn))
+# ROC-AUC Score
+roc_auc_knn = roc_auc_score(y_test, knn_clf.predict_proba(X_test)[:, 1])
+print("\nROC-AUC Score (K-NN): ", roc_auc_knn)
+
+
+#Prediction Using Support Vector Machine
+from sklearn.svm import SVC
+# Step 1: Preprocess the text using TF-IDF (assuming this is already done)
+# Step 2: Use the same train-test split as before (if not done yet, use train_test_split)
+# Step 3: Train the SVM Classifier with a linear kernel
+svm_clf = SVC(kernel='linear', probability=True, random_state=42)
+svm_clf.fit(X_train, y_train)
+# Step 4: Make predictions on the test set
+y_pred_svm = svm_clf.predict(X_tes
+# Step 5: Evaluate the model
+# Confusion Matrix
+print("Confusion Matrix (SVM):")
+print(confusion_matrix(y_test, y_pred_svm))
+# Classification Report (Precision, Recall, F1-score)
+print("\nClassification Report (SVM):")
+print(classification_report(y_test, y_pred_svm))
+# ROC-AUC Score
+roc_auc_svm = roc_auc_score(y_test, svm_clf.predict_proba(X_test)[:, 1])
+print("\nROC-AUC Score (SVM): ", roc_auc_svm)
